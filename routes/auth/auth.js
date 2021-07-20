@@ -79,14 +79,12 @@ router.post("/login", async (req, res) => {
     if (error)
       return res.status(400).send({ message: error.details[0].message });
     else {
-      res
-        .status(200)
-        .header("auth-token", user.token)
-        .send({
-          token: user.token,
-          name: user.name,
-          documents: user.documents,
-        });
+      res.status(200).header("auth-token", user.token).send({
+        token: user.token,
+        name: user.name,
+        documents: user.documents,
+        id: user._id,
+      });
     }
   } catch (error) {
     res.status(400).send(error);
