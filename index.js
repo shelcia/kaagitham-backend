@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 4050;
 //IMPORT ROUTES
 
 const authRoute = require("./routes/auth/auth");
+const documentRoute = require("./routes/common/document");
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use(express.json(), cors());
 //ROUTE MIDDLEWARE
 
 app.use("/api/auth", authRoute);
+app.use("/api/document", documentRoute);
 
 app.get("/", (req, res) => {
   res.send(`<p>Hey! It's working</p>`);

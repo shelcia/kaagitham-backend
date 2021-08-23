@@ -6,6 +6,7 @@ const documentSchema = new mongoose.Schema({
   },
   owner: {
     type: Array,
+    required: true,
   },
   shared: {
     type: Array,
