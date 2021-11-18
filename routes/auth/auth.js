@@ -19,10 +19,12 @@ const loginSchema = Joi.object({
 
 //SIGNUP USER
 router.post("/register", async (req, res) => {
+  // console.log(req.body);
+
   //CHECKING IF USER EMAIL ALREADY EXISTS
   const emailExist = await User.findOne({ email: req.body.email });
   if (emailExist) {
-    res.status(400).send("Email already exists");
+    res.status(200).send({ message: "Email already exists", status: "400" });
     return;
   }
 

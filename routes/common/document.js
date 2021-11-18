@@ -14,6 +14,15 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/user/:id", async (req, res) => {
+  try {
+    const result = await User.findById(req.params.id);
+    res.status(200).send({ status: "200", message: result });
+  } catch (err) {
+    res.status(200).send({ status: "500", message: "Internal Server Error" });
+  }
+});
+
 //CREATE NEW DOCUMENT
 
 router.post("/", async (req, res) => {
