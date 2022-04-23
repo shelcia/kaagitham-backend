@@ -28,9 +28,17 @@ router.get("/user/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const user = await User.findById(req.body.id);
-    const doc = new Document({
+
+    const body = {
+      title: "",
+      data: "",
       owner: [{ name: user.name, email: user.email }],
-    });
+      shared: [],
+      comments: [],
+      editHistory: [],
+    };
+
+    const doc = new Document(body);
     await doc.save();
     const updatedDocs = [...user.documents, doc._id];
     await user.set({ documents: updatedDocs });
@@ -42,9 +50,15 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
+  // console.log("rrrr", req.params.id);
+  // console.log(req.body);
+
   try {
-    const doc = await Document.findById(req.params.id);
-    res.status(200).send({ status: "200", message: doc });
+    const doc = await Document.findByIdAndUpdate(req.params.id, {
+      data: req.body.data,
+      title: req.body.title,
+    });
+    res.status(200).send({ status: "200", message: "Saved Successfully" });
   } catch (err) {
     res.status(200).send({ status: "500", message: "Internal Server Error" });
   }

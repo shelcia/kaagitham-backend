@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
 
 const documentSchema = new mongoose.Schema({
-  content: {
-    type: Object,
+  title: {
+    type: String,
+  },
+  data: {
+    type: String,
   },
   owner: {
     type: Array,
@@ -16,6 +19,7 @@ const documentSchema = new mongoose.Schema({
   },
   lastSaved: {
     type: Date,
+    default: Date.now(),
   },
   editHistory: {
     type: Array,

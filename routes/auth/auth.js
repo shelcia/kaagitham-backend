@@ -53,46 +53,68 @@ router.post("/register", async (req, res) => {
       //NEW USER IS ADDED
 
       await user.save();
-      res.status(200).send({ message: "User Created", token: token });
+      res.status(200).send({
+        status: "200",
+        message: {
+          token: user.token,
+          name: user.name,
+          documents: user.documents,
+          id: user._id,
+        },
+      });
     }
   } catch (error) {
-    res.status(400).send(error);
+    res.status(200).send({ status: "400", message: "Internal Servor error" });
   }
 });
 
 //SIGNIN USER
 
 router.post("/login", async (req, res) => {
-  //CHECKING IF USER EMAIL EXISTS
-
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) {
-    res.status(400).send("Incorrect Email- ID");
-    return;
-  }
-
-  //CHECKING IF USER PASSWORD MATCHES
-
-  const validPassword = await bcrypt.compare(req.body.password, user.password);
-  if (!validPassword)
-    return res.status(400).send({ message: "Incorrect Password" });
-
   try {
+    //CHECKING IF USER EMAIL EXISTS
+
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      res.status(200).send({ status: "400", message: "Incorrect Email- ID" });
+      return;
+    }
+
+    //CHECKING IF USER PASSWORD MATCHES
+
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword) {
+      res.status(200).send({ status: "400", message: "Incorrect Password" });
+      return;
+    }
+
     //VALIDATION OF USER INPUTS
 
     const { error } = await loginSchema.validateAsync(req.body);
-    if (error)
-      return res.status(400).send({ message: error.details[0].message });
-    else {
-      res.status(200).header("auth-token", user.token).send({
-        token: user.token,
-        name: user.name,
-        documents: user.documents,
-        id: user._id,
-      });
+    if (error) {
+      res
+        .status(200)
+        .send({ status: "400", message: error.details[0].message });
+      return;
+    } else {
+      res
+        .status(200)
+        .header("auth-token", user.token)
+        .send({
+          status: "200",
+          message: {
+            token: user.token,
+            name: user.name,
+            documents: user.documents,
+            id: user._id,
+          },
+        });
     }
   } catch (error) {
-    res.status(400).send(error);
+    res.status(200).send({ status: "400", message: "Internal Servor error" });
   }
 });
 
